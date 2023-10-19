@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('nin',15)->nullable(false);
             $table->string('region',30)->nullable(false);
             $table->string('date_expir')->nullable(false);
-            $table->boolean('generated',)->nullable()->default(false);
-            $table->bigInteger("parti_id")->nullable(true);
-            $table->bigInteger("user_id")->nullable(true);
+            $table->boolean('generated')->nullable()->default(false);
+            $table->string('commune')->nullable();
+            $table->bigInteger("parti_id")->nullable();
+            $table->bigInteger("user_id")->nullable();
             $table->timestamps();
 
 
