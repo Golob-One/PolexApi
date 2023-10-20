@@ -25,6 +25,11 @@ class ParrainageController extends Controller
         $rapports["users"] = Parrainage::select('user_id as user', DB::raw('count(*) as nombre'))
             ->groupBy('user')
             ->get();
+        $rapports["today_counts_per_user"] =
+            Parrainage::select('user_id as user', DB::raw('count(*) as nombre'))
+                ->whereDate("created_at",Carbon::today()->toDateString())
+                ->groupBy('user')
+                ->get();
 
         return $rapports;
     }
