@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 
 class Parrainage extends Model
 {
@@ -18,9 +19,13 @@ class Parrainage extends Model
     }
     public function getDateExpirAttribute()
     {
-        // Assuming published_at is the name of your date field
         if ($this->attributes['date_expir'] !=null) {
-            return Carbon::createFromFormat('d/m/Y', $this->attributes['date_expir'])->format('d/m/Y');
+            try {
+                return Carbon::createFromFormat('d/m/Y', $this->attributes['date_expir'])->format('d/m/Y');
+            } catch (\Exception $e) {
+                Log::error("unable to format attribute date_expir  with details".$e->getMessage());
+                return $this->attributes['date_expir'];
+            }
         }
 
         return null;

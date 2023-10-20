@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreParrainageRequest;
 use App\Http\Requests\UpdateParrainageRequest;
 use App\Models\Parrainage;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -15,9 +16,13 @@ class ParrainageController extends Controller
     public function index(): array
     {
 
+        $rapports["today_count"] = Parrainage::whereDate("created_at",Carbon::today()->toDateString())->count();
         $rapports["total_saisi"] = Parrainage::count();
         $rapports["regions"] = Parrainage::select('region as nom', DB::raw('count(*) as nombre'))
             ->groupBy('region')
+            ->get();
+        $rapports["users"] = Parrainage::select('user_id as user', DB::raw('count(*) as nombre'))
+            ->groupBy('user')
             ->get();
 
         return $rapports;
