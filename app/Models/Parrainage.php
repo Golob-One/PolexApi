@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 class Parrainage extends Model
 {
     use HasFactory;
-    protected $fillable = ["num_electeur","prenom", "nom", "nin","date_expir", "created_at","updated_at", "region","parti_id","user_id"];
+    protected $fillable = ["num_electeur","prenom", "nom", "nin","date_expir", "created_at","updated_at", "commune","region","parti_id","user_id"];
 
     public function parti(): BelongsTo
     {
