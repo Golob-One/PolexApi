@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateParrainageRequest;
 use App\Models\Parrainage;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 
@@ -34,7 +35,7 @@ class ParrainageController extends Controller
      * @param StoreParrainageRequest $request
      * @return JsonResponse
      */
-    public function store(StoreParrainageRequest $request)
+    public function store(Request $request)
     {
         //
         $data = $request->input();
@@ -79,7 +80,7 @@ class ParrainageController extends Controller
      * @param Parrainage $parrainage
      * @return Parrainage|JsonResponse
      */
-    public function update(UpdateParrainageRequest $request, $num_electeur)
+    public function update(Request $request, $num_electeur)
     {
         $parrainage = Parrainage::whereNumElecteur($num_electeur)->first();
         if ($parrainage != null){
