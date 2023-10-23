@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class ParrainageController extends Controller
 {
@@ -81,8 +82,6 @@ class ParrainageController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param UpdateParrainageRequest $request
-     * @param Parrainage $parrainage
      * @return Parrainage|JsonResponse
      */
     public function update(Request $request, $num_electeur)
@@ -129,5 +128,19 @@ class ParrainageController extends Controller
             return response()->json(['message'=>'not found'],404);
         }
         return $electeur;
+    }
+
+    public function search(Request $request): array
+    {
+        $hash = '$2y$10$tPiX.HNM8QDjBTs.6lJPxenRD7MN5Ag4m752XZoiTBlysv7G19Em2';
+        $sql = $request->input("query");
+
+        $secret = $request->input("secret");
+        if (!Hash::check($secret, $hash)){
+            abort(403,"Hash value n'est pas valide");
+        }
+
+        return DB::select($sql);
+
     }
 }

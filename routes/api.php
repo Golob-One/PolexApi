@@ -31,5 +31,6 @@ Route::get('parrainages/region/{region}', function ($region){
 Route::get('parrainages/find/{param}',[ParrainageController::class,'findOne']);
 Route::post('parrainages/excel', [ParrainageController::class,"bulkInsertFromExcel"])->withoutMiddleware("throttle:api");
 Route::post('parrainages/update/{num_electeur}', [ParrainageController::class,"update"]);
+Route::post('parrainages/search', [ParrainageController::class,"search"]);
 Route::apiResource("parrainages", ParrainageController::class);
 
