@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('parrainages/region/{region}', function ($region){
         return Parrainage::whereRegion($region)->orderBy("created_at")->paginate(500);
     });
+Route::delete('parrainages/delete/{parrainage}',[ParrainageController::class,'destroy']);
 Route::get('parrainages/find/{param}',[ParrainageController::class,'findOne']);
 Route::post('parrainages/excel', [ParrainageController::class,"bulkInsertFromExcel"])->withoutMiddleware("throttle:api");
 Route::post('parrainages/update/{num_electeur}', [ParrainageController::class,"update"]);

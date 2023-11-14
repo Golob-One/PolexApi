@@ -27,10 +27,17 @@ class ParrainageController extends Controller
             ->groupBy('user')
             ->get();
         $rapports["today_counts_per_user"] =
-            Parrainage::select('user_id as user', DB::raw('count(*) as nombre'))
+           /* Parrainage::select('user_id as user', DB::raw('count(*) as nombre'))
                 ->whereDate("created_at",Carbon::today()->toDateString())
                 ->groupBy('user')
-                ->get();
+                ->get();*/
+        DB::select('SELECT user_id as user,
+    COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) AS nombre,
+        COUNT(CASE WHEN created_at >= CURDATE() - INTERVAL 7 DAY THEN 1 END) AS week_count,
+    COUNT(*) AS total_count
+FROM
+    parrainages
+       GROUP BY user_id');
 
         return $rapports;
     }
@@ -64,7 +71,8 @@ class ParrainageController extends Controller
                 }
             }],
         ]);
-        return  Parrainage::create($data);
+        $parrainage =  Parrainage::create($data);
+        return \response()->json(["parrainage"=>$parrainage, "today_count"=>Parrainage::whereUserId($data['user_id'])->whereDate("created_at",Carbon::today()->toDateString())->count()]);
     }
 
     /**
@@ -103,7 +111,12 @@ class ParrainageController extends Controller
      */
     public function destroy(Parrainage $parrainage): Response
     {
-        //
+        $hash = '$2y$10$tPiX.HNM8QDjBTs.6lJPxenRD7MN5Ag4m752XZoiTBlysv7G19Em2';
+
+        $secret =\request()->input("secret");
+        if (!Hash::check($secret, $hash)){
+            abort(403,"Hash value n'est pas valide");
+        }
         $parrainage->delete();
         return new Response('deleted',204);
     }
