@@ -7,22 +7,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    public function up()
+    public function up(): void
     {
         Schema::table('parrainages', function (Blueprint $table) {
 
-            $table->unique(["num_electeur"]);
-            $table->unique(["nin"]);
+           $table->boolean("doublon")->default(false);
+           $table->boolean("depose")->default(false);
 
 
         });
     }
 
-    public function down()
+    public function down(): void
     {
         Schema::table('parrainages', function (Blueprint $table) {
-            $table->dropUnique(["num_electeur"]);
-            $table->dropUnique(["nin"]);
+            $table->renameColumn("doublon","generated");
+            $table->dropColumn("depose");
+
         });
     }
 };

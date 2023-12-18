@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class ParrainageController extends Controller
 {
@@ -27,11 +28,11 @@ class ParrainageController extends Controller
             ->groupBy('user')
             ->get();
         $rapports["today_counts_per_user"] =
-           /* Parrainage::select('user_id as user', DB::raw('count(*) as nombre'))
-                ->whereDate("created_at",Carbon::today()->toDateString())
-                ->groupBy('user')
-                ->get();*/
-        DB::select('SELECT user_id as user,
+            /* Parrainage::select('user_id as user', DB::raw('count(*) as nombre'))
+                 ->whereDate("created_at",Carbon::today()->toDateString())
+                 ->groupBy('user')
+                 ->get();*/
+            DB::select('SELECT user_id as user,
     COUNT(CASE WHEN DATE(created_at) = CURDATE() THEN 1 END) AS nombre,
         COUNT(CASE WHEN created_at >= CURDATE() - INTERVAL 7 DAY THEN 1 END) AS week_count,
     COUNT(*) AS total_count
@@ -100,7 +101,7 @@ FROM
         }else{
             return \response()->json(["message"=>"Parrainage introuvable ! "],404);
         }
-         return  $parrainage;
+        return  $parrainage;
     }
 
     /**
@@ -145,12 +146,12 @@ FROM
 
     public function search(Request $request): array
     {
-        $hash = '$2y$10$tPiX.HNM8QDjBTs.6lJPxenRD7MN5Ag4m752XZoiTBlysv7G19Em2';
+        $hash = env('PARTI_SECRET');
+        $secret = $request->input("secret");
         $sql = $request->input("query");
 
-        $secret = $request->input("secret");
-        if (!Hash::check($secret, $hash)){
-            abort(403,"Hash value n'est pas valide");
+        if ($hash != $secret){
+            abort(403,"Le code secret n'est pas valide !");
         }
 
         return DB::select($sql);
