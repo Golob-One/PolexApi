@@ -30,8 +30,8 @@ Route::get('parrainages/region/{region}', function ($region){
         return Parrainage::whereRegion($region)->orderBy("created_at")->paginate(500);
     });
 Route::get('parrainages/final/all', function (){
-        return ParrainageFinal::where("id",">",0)->orderBy("created_at")->paginate(500);
-    });
+        return ParrainageFinal::where("id",">",0)->orderBy("created_at")->paginate(1000);
+    })->withoutMiddleware("throttle:api");
 Route::get('parrainages/final/region/{region}', function ($region){
 //    dd(DB::table('parrainages_final')->select(['*'])->where("region","LIKE",$region)->orderBy("created_at")->toRawSql()
 //);
